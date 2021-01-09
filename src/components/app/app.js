@@ -48,9 +48,6 @@ export default class App extends Component {
         const newItem = this.creatItemState(text);
         this.setState(({todoData}) => {
             const newArr = [...todoData, newItem];
-            // либо так
-            // const newArr = todoData.slice();
-            // newArr.push(newItem);
             return {
                 todoData: newArr
             }
