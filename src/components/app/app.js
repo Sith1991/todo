@@ -19,7 +19,9 @@ export default class App extends Component {
                 this.creatItemState('Drink Coffee'),
                 this.creatItemState('Make Awesome App'),
                 this.creatItemState('Have a lunch'),
-            ]
+            ],
+        term: '',
+        filter: 'all',
     }
 
     creatItemState (label) {
@@ -81,9 +83,46 @@ export default class App extends Component {
         })
     }
 
+    searchItems = (arr, term) => {
+        if (term.length === 0) {
+            return arr;
+        }
+
+        const findedItems = arr.filter( (el) =>
+        el.label.toLowerCase().indexOf(term.toLowerCase()) > -1 )
+        return findedItems;
+    }
+
+    termSetup = (term) => {
+        this.setState({
+            term
+    })
+    }
+
+    onFilterChanged = (filter) => {
+        this.setState({
+            filter
+        })
+    }
+
+    filteredItems = (arr, filter) => {
+        switch (filter) {
+            case 'all':
+                return arr;
+            case 'active':
+                return arr.filter( (el) => !el.done );
+            case 'done':
+                return arr.filter( (el) => el.done );
+            default:
+                return arr;
+        }
+    }
+
     render() {
 
-        const { todoData } = this.state;
+        const { todoData, term, filter } = this.state;
+
+        const visibleItems = this.filteredItems(this.searchItems(todoData, term), filter);
 
         const doneCount = todoData.filter( (el) => el.done).length;
 
@@ -93,10 +132,11 @@ export default class App extends Component {
             <div className="todo-app">
                 <AppHeader toDo={toDoCount} done={doneCount}/>
                 <div className="top-panel d-flex">
-                    <SearchPanel/>
-                    <ItemStatusFilter/>
+                    <SearchPanel termSetup={this.termSetup} />
+                    <ItemStatusFilter filter={filter}
+                        onFilterChanged={this.onFilterChanged} />
                 </div>
-                <TodoList todos={todoData}
+                <TodoList todos={visibleItems}
                           onDeleted={this.deleteItem}
                           onToggleImportant={this.onToggleImportant}
                           onToggleDone={this.onToggleDone}/>

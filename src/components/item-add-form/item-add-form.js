@@ -12,8 +12,7 @@ export default class ItemAddForm extends Component {
         this.setState(
             {
                 label: e.target.value
-            }
-        )
+            })
     }
 
     onSubmit = (e) => {
@@ -22,9 +21,7 @@ export default class ItemAddForm extends Component {
         this.setState(
             {
                 label: ''
-            }
-
-        )
+            })
     }
 
     render() {
